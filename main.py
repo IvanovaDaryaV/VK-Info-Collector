@@ -42,6 +42,7 @@ def get_subscriptions(user_id):
         "v": API_VERSION
     }
     response = requests.get(url, params=params).json()
+    #print("Response for subscriptions:", response)
     return response.get("response", {}).get("items", [])
 
 
@@ -49,8 +50,23 @@ def save_to_json(data, filename):
     with open(filename, "w", encoding="utf-8") as f:
         json.dump(data, f, ensure_ascii=False, indent=4)
 
+def get_numeric_user_id(user_name):
+    url = f"{BASE_URL}users.get"
+    params = {
+        "user_ids": user_name,
+        "access_token": ACCESS_TOKEN,
+        "v": API_VERSION
+    }
+    response = requests.get(url, params=params).json()
+    if response.get("response"):
+        return response["response"][0]["id"]
+    else:
+        print("Error fetching user ID:", response)
+        return None
 
 def main(user_id, output_file):
+    user_name = user_id
+    user_id = get_numeric_user_id(user_name)
     user_info = get_user_info(user_id)
     if user_info and user_info.get("followers_count", 0) > 0:
         followers = get_followers(user_id)
@@ -66,7 +82,7 @@ def main(user_id, output_file):
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Получение информации о пользователе ВКонтакте")
-    parser.add_argument("--user_id", type=str, default="yllwftc00", help="ID пользователя ВКонтакте")
+    parser.add_argument("--user_id", type=str, default="olegan_west", help="ID пользователя ВКонтакте")
     parser.add_argument("--output", type=str, default="vk_data.json", help="Путь к файлу для сохранения данных")
 
     args = parser.parse_args()
