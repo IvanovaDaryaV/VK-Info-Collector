@@ -1,9 +1,11 @@
 import requests
 import json
+import os
+import argparse
 
 BASE_URL = "https://api.vk.com/method/"
 API_VERSION = "5.131"
-ACCESS_TOKEN = "YOUR_ACCESS_TOKEN"  # Вставьте свой токен здесь
+ACCESS_TOKEN = os.getenv("VK_ACCESS_TOKEN")
 
 
 def get_user_info(user_id):
@@ -43,14 +45,12 @@ def get_subscriptions(user_id):
     return response.get("response", {}).get("items", [])
 
 
-def save_to_json(data, filename="vk_data.json"):
+def save_to_json(data, filename):
     with open(filename, "w", encoding="utf-8") as f:
         json.dump(data, f, ensure_ascii=False, indent=4)
 
 
-def main():
-    user_id = "USER_ID"  # Укажите ID пользователя
-
+def main(user_id, output_file):
     user_info = get_user_info(user_id)
     if user_info and user_info.get("followers_count", 0) > 0:
         followers = get_followers(user_id)
@@ -58,11 +58,16 @@ def main():
 
         user_info.update({"followers": followers, "subscriptions": subscriptions})
 
-        save_to_json(user_info)
-        print("Данные сохранены в vk_data.json")
+        save_to_json(user_info, output_file)
+        print(f"Данные сохранены в {output_file}")
     else:
         print("У пользователя нет подписчиков или подписок.")
 
 
 if __name__ == "__main__":
-    main()
+    parser = argparse.ArgumentParser(description="Получение информации о пользователе ВКонтакте")
+    parser.add_argument("--user_id", type=str, default="yllwftc00", help="ID пользователя ВКонтакте")
+    parser.add_argument("--output", type=str, default="vk_data.json", help="Путь к файлу для сохранения данных")
+
+    args = parser.parse_args()
+    main(args.user_id, args.output)
