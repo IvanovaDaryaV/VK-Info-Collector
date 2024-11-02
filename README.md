@@ -12,7 +12,7 @@
 - id пользователя
 - путь файла результата
 
-Команда для запуска с параметрами: ```python main.py --user_id yllwftc00 --output my_vk_data.json```
+Команда для запуска с параметрами: ```python main.py --user_id [id пользователя] --output [путь к файлу]```
 
 
 
