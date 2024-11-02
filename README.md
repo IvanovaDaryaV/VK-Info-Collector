@@ -12,10 +12,10 @@
 - id пользователя
 - путь файла результата
 
-Команда для запуска с параметрами: ```python your_script.py --user_id yllwftc00 --output my_vk_data.json```
+Команда для запуска с параметрами: ```python main.py --user_id yllwftc00 --output my_vk_data.json```
 
 
 
 Для запуска с параметрами по умолчанию, выполните команду:
-```python your_script.py```.
+```python main.py```.
 Файл с данными будет сохранен в `vk_data.json`.
